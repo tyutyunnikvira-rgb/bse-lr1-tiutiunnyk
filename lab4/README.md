@@ -22,7 +22,7 @@
 | 4 | Відсутня типізація параметрів | Style / Tooling | Додати Type Hints для стабільності |
 | 5 | Закоментований код або неінформативні докстрінги | Dead Code / Naming | Оновити документацію та видалити зайве |
 
-**Посилання на Pull Request:** [ВСТАВ СВОЄ ПОСИЛАННЯ ТУТ]
+**Посилання на Pull Request:** [https://github.com/tyutyunnikvira-rgb/bse-lr1-tiutiunnyk/pull/1]
 
 ---
 
