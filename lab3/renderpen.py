@@ -1,54 +1,43 @@
-# renderpen.py
-
 class RenderPen:
-    """Модуль керування 3D-проєктами RenderPen"""
+    """Модуль керування 3D-проєктами RenderPen за стандартами Clean Code."""
 
-    def __init__(self):
-        self.max_file_size_mb = 50.0
-        self.allowed_extension = ".glb"
+    # Константи (усунення Magic Numbers)
+    MAX_FILE_SIZE_MB = 50.0
+    ALLOWED_EXTENSION = ".glb"
+    MIN_COORD = -1000.0
+    MAX_COORD = 1000.0
+    MAX_TEXT_LEN = 100
 
     def validate_upload(self, filename: str, size_mb: float) -> bool:
-        """
-        Перевіряє можливість завантаження файлу (FR-01).
-        Логіка: правильне розширення та розмір від 0 до 50 МБ.
-        """
-        if not filename.lower().endswith(self.allowed_extension):
-            raise ValueError("Invalid file extension. Only .glb is allowed.")
+        """Перевіряє валідність завантаження (Refactored)."""
+        self._check_extension(filename)
+        self._check_positive_size(size_mb)
         
+        return size_mb <= self.MAX_FILE_SIZE_MB
+
+    def _check_extension(self, filename: str):
+        """Приватний метод для перевірки розширення (SRP)."""
+        if not filename.lower().endswith(self.ALLOWED_EXTENSION):
+            raise ValueError(f"Дозволено лише {self.ALLOWED_EXTENSION}")
+
+    def _check_positive_size(self, size_mb: float):
+        """Приватний метод для перевірки розміру (SRP)."""
         if size_mb <= 0:
-            raise ValueError("File size must be greater than 0.")
-            
-        if size_mb > self.max_file_size_mb:
-            return False  # Занадто великий файл
-            
-        return True
+            raise ValueError("Розмір файлу має бути більше 0")
 
     def validate_label(self, x: float, y: float, z: float, text: str) -> bool:
-        """
-        Валідація мітки (FR-02). 
-        Логіка: координати в межах [-1000, 1000], текст від 1 до 100 символів.
-        """
-        # Перевірка координат
-        for coord in [x, y, z]:
-            if coord < -1000 or coord > 1000:
-                return False
+        """Валідація мітки з використанням констант."""
+        coords_valid = all(self.MIN_COORD <= c <= self.MAX_COORD for c in [x, y, z])
+        text_valid = 0 < len(text.strip()) <= self.MAX_TEXT_LEN
         
-        # Перевірка тексту
-        text_len = len(text.strip())
-        if text_len == 0 or text_len > 100:
-            return False
-            
-        return True
+        return coords_valid and text_valid
 
     def format_public_link(self, project_id: str, is_published: bool) -> str:
-        """
-        Генерує публічне посилання (FR-04).
-        Логіка: посилання створюється тільки якщо статус True та ID не порожній.
-        """
+        """Генерує посилання (Clean Logic)."""
         if not project_id:
-            raise ValueError("Project ID cannot be empty.")
+            raise ValueError("ID проєкту не може бути порожнім")
             
-        if is_published:
-            return f"https://renderpen.com/view/{project_id}"
-        else:
+        if not is_published:
             return "Project is private"
+            
+        return f"https://renderpen.com/view/{project_id}"
