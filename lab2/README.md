@@ -78,20 +78,20 @@ classDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant U as Користувач
-    participant UI as Редактор (Браузер)
-    participant S as AuthService
-    participant P as Project
-    participant L as Label
+        participant U as Користувач
+            participant UI as Редактор (Браузер)
+                participant S as AuthService
+                    participant P as Project
+                        participant L as Label
 
-    U->>UI: Клік на точку моделі
-    UI->>S: Перевірка автентифікації
-    S-->>UI: Токен валідний
-    U->>UI: Введення тексту мітки
-    UI->>L: Створення об'єкта Label
-    L-->>P: Реєстрація мітки в проєкті
-    P-->>UI: Оновлення 3D-сцени
-    UI-->>U: Візуальне підтвердження
+                            U->>UI: Клік на точку моделі
+                                UI->>S: Перевірка автентифікації
+                                    S-->>UI: Токен валідний
+                                        U->>UI: Введення тексту мітки
+                                            UI->>L: Створення об'єкта Label
+                                                L-->>P: Реєстрація мітки в проєкті
+                                                    P-->>UI: Оновлення 3D-сцени
+                                                        UI-->>U: Візуальне підтвердження
 ```
   ## 6. Матриця трасовності
 Таблиця демонструє відповідність між функціональними вимогами та створеними UML-артефактами.
