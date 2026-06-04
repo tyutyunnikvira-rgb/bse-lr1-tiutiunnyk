@@ -24,25 +24,22 @@
 
 ```mermaid
 graph LR
-    User((Зареєстрований користувач))
-    Guest((Глядач))
+    User[Користувач]
+    Guest[Глядач]
 
     subgraph RenderPen_System
-        UC1(Завантажити модель .glb)
-        UC2(Додати мітку Label)
-        UC3(Налаштувати зріз Cutaway)
+        UC1(Завантажити модель)
+        UC2(Додати мітку)
+        UC3(Налаштувати зріз)
         UC4(Генерувати посилання)
-        UC5(Переглянути інструкцію)
-        UC6(Автентифікація)
+        UC5(Переглянути проєкт)
     end
 
-    User --> UC1
-    User --> UC2
-    User --> UC3
-    User --> UC4
-    User --> UC6
-    Guest --> UC5
-    UC1 ..> UC6 : <<include>>
+    User --- UC1
+    User --- UC2
+    User --- UC3
+    User --- UC4
+    Guest --- UC5
 ```
 
 ## 4. Діаграма класів (Class Diagram)
@@ -50,36 +47,29 @@ graph LR
 
 ```mermaid
 classDiagram
-    Project "1" *-- "1" Model : містить
-    Project "1" *-- "*" Label : має
-    Project "1" *-- "*" Cutaway : налаштовує
-    User "1" -- "*" Project : створює
-    
+    direction BT
+    Project "1" *-- "1" Model
+    Project "1" *-- "*" Label
+    Project "1" *-- "*" Cutaway
+    User "1" --> "*" Project
     class User {
         +String email
-        +String password
         +login()
     }
     class Model {
         +String filename
-        +float fileSize
         +validateFormat()
     }
     class Label {
-        +float x
-        +float y
-        +float z
+        +float x, y, z
         +String text
-        +render()
     }
     class Project {
         +String name
-        +boolean isPublished
         +generateLink()
     }
     class Cutaway {
-        +float planePosition
-        +applySlice()
+        +float position
     }
 ```
 ## 5. Діаграма послідовності (Sequence Diagram)
@@ -87,20 +77,21 @@ classDiagram
 
 ```mermaid
 sequenceDiagram
-    actor U as Користувач
+    autonumber
+    participant U as Користувач
     participant UI as Редактор (Браузер)
     participant S as AuthService
     participant P as Project
     participant L as Label
 
-    U->>UI: Клік на точку деталі моделі
-    UI->>S: Перевірка автентифікації автора
+    U->>UI: Клік на точку моделі
+    UI->>S: Перевірка автентифікації
     S-->>UI: Токен валідний
-    U->>UI: Введення тексту анотації
-    UI->>L: new Label(coords, text)
-    L-->>P: Реєстрація мітки в поточному проєкті
-    P-->>UI: Оновлення тривимірної сцени
-    UI-->>U: Візуальне підтвердження створення мітки
+    U->>UI: Введення тексту мітки
+    UI->>L: Створення об'єкта Label
+    L-->>P: Реєстрація мітки в проєкті
+    P-->>UI: Оновлення 3D-сцени
+    UI-->>U: Візуальне підтвердження
 ```
   ## 6. Матриця трасовності
 Таблиця демонструє відповідність між функціональними вимогами та створеними UML-артефактами.
